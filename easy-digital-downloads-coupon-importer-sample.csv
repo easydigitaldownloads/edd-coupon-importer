@@ -1,0 +1,3 @@
+discount_name,code,type,starts,ends,status,uses,max uses,amount,min price,product requirements,product condition,is not global,is single use,
+Chris\'s Discount,CHRISISAWESOME,percentage,2012-11-01 01:01:01,2014-11-01 01:01:01,active,1,100,20,$10.00, , ,0,1, ,
+Chris\'s Discount,CHRISISAWESOME,percentage,2012-11-01 01:01:01,2014-11-01 01:01:01,active,1,100,20%,10, ,0,0, ,
