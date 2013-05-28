@@ -26,6 +26,8 @@ if ( class_exists( 'Easy_Digital_Downloads' ) ) {
     define( 'EDD_CI_STORE_URL', 'https://easydigitaldownloads.com' );
     define( 'EDD_CI', 'Coupon Importer' );
     define( 'EDD_CI_VERSION', '1.0' );
+	define( 'EDD_CI_STORE_API_URL', 'https://easydigitaldownloads.com' ); 
+	define( 'EDD_CI_PRODUCT_NAME', 'Coupon Importer' ); 
     
     if ( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
         include( dirname( __FILE__ ) . '/EDD_SL_Plugin_Updater.php' );
@@ -42,12 +44,8 @@ if ( class_exists( 'Easy_Digital_Downloads' ) ) {
             'item_name' => EDD_CI, // name of this plugin
             'author' => 'Chris Christoff' // author of this plugin
         ) );
+	add_filter( 'edd_settings_misc' , 'add_ci_misc_settings' );
     }
-    add_action( 'admin_init', 'edd_ci_updater' );
-    add_action( 'admin_menu', 'edd_ci_license_menu' );
-    add_action( 'admin_init', 'edd_ci_register_option' );
-    add_action( 'admin_init', 'edd_ci_deactivate_license' );
-    add_action( 'admin_init', 'edd_ci_activate_license' );
     
     if ( is_admin() ) {
         
@@ -113,3 +111,55 @@ if ( class_exists( 'Easy_Digital_Downloads' ) ) {
     include_once( EDD_COUPON_IMPORT_DIR . 'includes/admin-page.php' );
     include_once( EDD_COUPON_IMPORT_DIR . 'includes/import-functions.php' );
 }
+	function add_misc_ci_settings( $settings ) {
+
+		$settings[] = array(
+					'id'   => 'edd_ci_settings',
+					'name' => __( '<strong>Amazon S3 Settings</strong>', 'edd' ),
+					'desc' => '',
+					'type' => 'header'
+		);
+
+		$settings[] = array(
+					'id' => 'edd_ci_settings_license_key',
+					'name' => __('License Key', 'edd_et'),
+					'desc' => __('Enter your license for Amazon S3 to receive automatic upgrades', 'edd_sl'),
+					'type' => 'text',
+					'size' => 'regular'
+		);
+
+		return $settings;
+	}
+
+	function activate_license() {
+		global $edd_options;
+		if( ! isset( $_POST['edd_settings_misc'] ) )
+			return;
+		if( ! isset( $_POST['edd_settings_misc']['edd_ci_settings_license_key'] ) )
+			return;
+
+		if( get_option( 'edd_ci_settings_license_active' ) == 'active' )
+			return;
+
+		$license = sanitize_text_field( $_POST['edd_settings_misc']['edd_ci_settings_license_key'] );
+
+		// data to send in our API request
+		$api_params = array( 
+			'edd_action'=> 'activate_license', 
+			'license' 	=> $license, 
+			'item_name' => urlencode( EDD_CI_PRODUCT_NAME ) // the name of our product in EDD
+		);
+		
+		// Call the custom API.
+		$response = wp_remote_get( add_query_arg( $api_params, EDD_CI_STORE_API_URL ) );
+
+		// make sure the response came back okay
+		if ( is_wp_error( $response ) )
+			return false;
+
+		// decode the license data
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		update_option( 'edd_amazon_s3_license_active', $license_data->license );
+
+	}
