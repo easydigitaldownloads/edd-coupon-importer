@@ -8,7 +8,7 @@ Author URI: http://www.chriscct7.com
 Version: 1.0
 */
 
-if ( is_edd_activated() ) {
+if ( class_exists( 'Easy_Digital_Downloads' ) ) {
     
     // plugin folder url
     if ( !defined( 'EDD_COUPON_IMPORT_URL' ) ) {
