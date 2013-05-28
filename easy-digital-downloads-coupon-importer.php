@@ -112,5 +112,4 @@ if ( is_edd_activated() ) {
     include_once( EDD_COUPON_IMPORT_DIR . 'includes/admin-actions.php' );
     include_once( EDD_COUPON_IMPORT_DIR . 'includes/admin-page.php' );
     include_once( EDD_COUPON_IMPORT_DIR . 'includes/import-functions.php' );
-    include_once( EDD_COUPON_IMPORT_DIR . 'includes/install.php' );
 }
