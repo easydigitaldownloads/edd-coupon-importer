@@ -81,40 +81,6 @@ function edd_show_coupon_import_log() {
 }
 
 
-
-/**
- * Setup Upload Directories
- *
- * Patterned after edd_change_downloads_upload_dir() located in includes/upload-functions.php
- * @access      public
- * @since       1.0
- * @return      void
-*/
-function edd_setup_upload_dirs() {
-
-    $wp_upload_dir = wp_upload_dir();
-    $upload_path = $wp_upload_dir['basedir'] . '/edd' . $wp_upload_dir['subdir'];
-
-    // We don't want users snooping in the EDD root, so let's add htaccess there, first
-    // Creating the directory if it doesn't already exist.
-    $rules = 'Options -Indexes';
-    if( ! @file_get_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess' ) ) {
-    	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
-    } // end if
-    @file_put_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess', $rules );
-
-    // now add blank index.php files to the {year}/{month} directory
-    if ( wp_mkdir_p( $upload_path ) ) {
-
-        $folder = '.';
-        if( !file_exists( $folder . 'index.php' ) ) {
-            @file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
-        }
-
-    }
-
-}
-
 /**
  * Import CSV File
  *
