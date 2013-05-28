@@ -6,9 +6,7 @@ Import discounts into Easy Digital Downloads via CSV
 
 == Description ==
 
-This is an extension for [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/) that allows you to bulk import your products from a CSV file. The import can handle complete product creation, including descriptions, prices, categories, download files, and all other aspects of the download product configuration.
-
-If you wish to report a bug or a feature request for this importer, please do so on the EDD support forums.
+This is an extension for [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/) that allows you to bulk import your products from a CSV file. If you wish to report a bug or a feature request for this importer, please do so on the EDD support forums.
 
 == Installation ==
 
