@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Easy Digital Downloads - Coupon Import
+Plugin Name: Easy Digital Downloads - Coupon Importer
 Plugin URI: http://easydigitaldownloads.com/chris-is-amazing
 Description: Adds the ability to import coupons via a CSV file.
 Author: Chris Christoff
@@ -22,7 +22,7 @@ if ( class_exists( 'Easy_Digital_Downloads' ) ) {
     if ( !defined( 'EDD_COUPON_IMPORT_FILE' ) ) {
         define( 'EDD_COUPON_IMPORT_FILE', __FILE__ );
     }
-    
+    function edd_ci_updater() {    
     define( 'EDD_CI_STORE_URL', 'https://easydigitaldownloads.com' );
     define( 'EDD_CI', 'Coupon Importer' );
     define( 'EDD_CI_VERSION', '1.0' );
@@ -34,7 +34,7 @@ if ( class_exists( 'Easy_Digital_Downloads' ) ) {
     // retrieve our license key from the DB
     $license_key = trim( get_option( 'edd_ci_license_key' ) );
     
-    function edd_ci_updater() {
+
         // setup the updater
         $edd_updater = new EDD_SL_Plugin_Updater( EDD_CI_STORE_URL, __FILE__, array(
              'version' => EDD_CI_VERSION, // current version number
