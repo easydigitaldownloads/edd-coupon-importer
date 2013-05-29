@@ -44,7 +44,6 @@ if ( class_exists( 'Easy_Digital_Downloads' ) ) {
             'item_name' => EDD_CI, // name of this plugin
             'author' => 'Chris Christoff' // author of this plugin
         ) );
-	add_filter( 'edd_settings_misc' , 'add_ci_misc_settings' );
     }
     
     if ( is_admin() ) {
@@ -111,25 +110,6 @@ if ( class_exists( 'Easy_Digital_Downloads' ) ) {
     include_once( EDD_COUPON_IMPORT_DIR . 'includes/admin-page.php' );
     include_once( EDD_COUPON_IMPORT_DIR . 'includes/import-functions.php' );
 }
-	function add_misc_ci_settings( $settings ) {
-
-		$settings[] = array(
-					'id'   => 'edd_ci_settings',
-					'name' => __( '<strong>Amazon S3 Settings</strong>', 'edd' ),
-					'desc' => '',
-					'type' => 'header'
-		);
-
-		$settings[] = array(
-					'id' => 'edd_ci_settings_license_key',
-					'name' => __('License Key', 'edd_et'),
-					'desc' => __('Enter your license for Amazon S3 to receive automatic upgrades', 'edd_sl'),
-					'type' => 'text',
-					'size' => 'regular'
-		);
-
-		return $settings;
-	}
 
 	function activate_license() {
 		global $edd_options;
