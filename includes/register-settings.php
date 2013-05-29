@@ -20,7 +20,20 @@
 
 function edd_csv_coupon_import_register_settings( $settings ) {
 	global $edd_import_coupon_file_columns;
+		$settings[] = array(
+					'id'   => 'edd_ci_settings',
+					'name' => __( '<strong>Amazon S3 Settings</strong>', 'edd' ),
+					'desc' => '',
+					'type' => 'header'
+		);
 
+		$settings[] = array(
+					'id' => 'edd_ci_settings_license_key',
+					'name' => __('License Key', 'edd_et'),
+					'desc' => __('Enter your license for Amazon S3 to receive automatic upgrades', 'edd_sl'),
+					'type' => 'text',
+					'size' => 'regular'
+		);
 	$settings[] = array(
 					'id' => 'edd_csv_discount_import',
 					'name' => '<strong>' . __('CSV Coupon Import Mapping', 'edd') . '</strong>',
