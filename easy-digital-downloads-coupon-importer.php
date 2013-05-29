@@ -228,7 +228,7 @@ class EDD_CI {
 					'name' => __('License Key', 'edd'),
 					'desc' => __('Enter your license for EDD Coupon Importer to receive automatic upgrades', 'edd'),
 					'type' => 'license_key',
-					'size' => 'regular'
+					'size' => 'regular',
 					'options' => array( 'is_valid_license_option' => 'edd_ci_license_active' )
 		),
 	array(
