@@ -217,17 +217,19 @@ class EDD_CI {
 	$ci_settings = array(
 	array(
 					'id'   => 'edd_ci_settings',
-					'name' => __( '<strong>EDD Coupon Importer</strong>', 'edd' ),
+					'name' => '<strong>' . __( 'Coupon Importer', 'edd' ) . '</strong>',,
 					'desc' => '',
-					'type' => 'header'
+					'type' => 'header',
+					'size' => 'regular'
 		),
 
 	array(
-					'id' => 'edd_ci_settings_license_key',
+					'id'   => 'edd_ci_settings_license_key',
 					'name' => __('License Key', 'edd'),
 					'desc' => __('Enter your license for EDD Coupon Importer to receive automatic upgrades', 'edd'),
-					'type' => 'text',
+					'type' => 'license_key',
 					'size' => 'regular'
+					'options' => array( 'is_valid_license_option' => 'edd_ci_license_active' )
 		),
 	array(
 					'id' => 'edd_csv_discount_import',
@@ -357,15 +359,15 @@ class EDD_CI {
 
 		global $edd_options;
 
-		if( ! isset( $_POST['edd_settings_general'] ) )
+		if( ! isset( $_POST['edd_settings_misc'] ) )
 			return;
-		if( ! isset( $_POST['edd_settings_general']['edd_ci_license_key'] ) )
+		if( ! isset( $_POST['edd_settings_misc']['edd_ci_license_key'] ) )
 			return;
 
 		if( get_option( 'edd_ci_license_active' ) == 'valid' )
 			return;
 
-		$license = sanitize_text_field( $_POST['edd_settings_general']['edd_ci_license_key'] );
+		$license = sanitize_text_field( $_POST['edd_settings_misc']['edd_ci_license_key'] );
 
 		// data to send in our API request
 		$api_params = array(
@@ -399,10 +401,10 @@ class EDD_CI {
 	public function deactivate_license() {
 		global $edd_options;
 
-		if ( ! isset( $_POST['edd_settings_general'] ) )
+		if ( ! isset( $_POST['edd_settings_misc'] ) )
 			return;
 
-		if ( ! isset( $_POST['edd_settings_general']['edd_ci_license_key'] ) )
+		if ( ! isset( $_POST['edd_settings_misc']['edd_ci_license_key'] ) )
 			return;
 
 		// listen for our activate button to be clicked
