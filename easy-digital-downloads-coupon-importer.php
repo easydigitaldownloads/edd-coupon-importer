@@ -217,7 +217,7 @@ class EDD_CI {
 	$ci_settings = array(
 	array(
 					'id'   => 'edd_ci_settings',
-					'name' => '<strong>' . __( 'Coupon Importer', 'edd' ) . '</strong>',,
+					'name' => '<strong>' . __( 'Coupon Importer', 'edd' ) . '</strong>',
 					'desc' => '',
 					'type' => 'header',
 					'size' => 'regular'
