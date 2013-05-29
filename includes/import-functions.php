@@ -194,8 +194,7 @@ function edd_import_coupon_csv_file() {
 
 							$edd_log_file .= sprintf(__('Successfully validated row: %d', 'edd'), $row_ctr ) . "\n";
 
-						} else {
-								
+						} else {								
 							$meta = array(
 									'code'       		=> $edd_discount_code,
 									'uses'       		=> $edd_discount_uses,
@@ -223,7 +222,7 @@ function edd_import_coupon_csv_file() {
 								foreach( $meta as $key => $value ) {
 									update_post_meta( $edd_discount_id , '_edd_discount_' . $key, $value );
 								}
-
+								$edd_log_file .= sprintf(__('Successfully updated row: %d', 'edd'), $row_ctr ) . "\n";
 								
 							}
 							else {
@@ -241,6 +240,7 @@ function edd_import_coupon_csv_file() {
 								foreach ( $meta as $key => $value ) {
 									update_post_meta( $new_download_id, '_edd_discount_' . $key, $value );
 								}
+								$edd_log_file .= sprintf(__('Successfully imported row: %d', 'edd'), $row_ctr ) . "\n";
 							
 							}
 
