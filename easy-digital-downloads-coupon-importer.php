@@ -5,7 +5,7 @@ Plugin URI: http://easydigitaldownloads.com/chris-is-amazing
 Description: Adds the ability to import coupons via a CSV file.
 Author: Chris Christoff
 Author URI: http://www.chriscct7.com
-Version: 1.0
+Version: 1.1
 */
 
 class EDD_CI {
@@ -42,7 +42,7 @@ class EDD_CI {
 
 		define( 'EDD_CI_STORE_API_URL', 'https://easydigitaldownloads.com' );
 		define( 'EDD_CI_PRODUCT_NAME', 'Coupon Importer' );
-		define( 'EDD_CI_VERSION', '1.0' );
+		define( 'EDD_CI_VERSION', '1.1' );
 		// plugin folder url
 		if ( !defined( 'EDD_COUPON_IMPORT_URL' ) ) {
 			define( 'EDD_COUPON_IMPORT_URL', plugin_dir_url( __FILE__ ) );
@@ -273,7 +273,7 @@ class EDD_CI {
 					'options'	=> $edd_import_coupon_file_columns
 				),
 	array(
-					'id' 		=> 'edd_import_discount_type',
+					'id' 		=> 'edd_import_discount_status',
 					'name'		=> __('Status:','edd'),
 					'desc'		=> __('Possible values: \'active\',\'inactive\',or \'expired\'', 'edd'),
 					'type' 		=> 'select',
@@ -310,7 +310,7 @@ class EDD_CI {
 	array(
 					'id' 		=> 'edd_import_discount_product_reqs',
 					'name'		=> __('Product Requirements:','edd'),
-					'desc'		=> __('Products that must be in cart for coupon to be used. Valid input: Array of product ids.', 'edd'),
+					'desc'		=> __('Products that must be in cart for coupon to be used. Valid input: If one product, just the id. If multiple, seperate by pipes: 20|32|108', 'edd'),
 					'type' 		=> 'select',
 					'options'	=> $edd_import_coupon_file_columns
 				),
