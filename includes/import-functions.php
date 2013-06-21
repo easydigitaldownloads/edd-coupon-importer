@@ -194,7 +194,12 @@ function edd_import_coupon_csv_file() {
 
 							$edd_log_file .= sprintf(__('Successfully validated row: %d', 'edd'), $row_ctr ) . "\n";
 
-						} else {								
+						} else {
+							
+							$edd_discount_product_reqs = explode("|",$edd_discount_product_reqs);
+							foreach($edd_discount_product_reqs as $index => $val){
+								$edd_discount_product_reqs[$index] = trim($val);  
+							}
 							$meta = array(
 									'code'       		=> $edd_discount_code,
 									'uses'       		=> $edd_discount_uses,
@@ -204,8 +209,8 @@ function edd_import_coupon_csv_file() {
 									'expiration' 		=> $edd_discount_end,
 									'type'       		=> $edd_discount_type,
 									'min_price'   		=> $edd_discount_min_price,
-									'product_reqs'      => $edd_discount_min_price,
-									'product_condition' => $edd_discount_product_reqs,
+									'product_reqs'      => $edd_discount_product_reqs,
+									'product_condition' => $edd_discount_product_condition,
 									'is_not_global'     => $edd_discount_is_not_global,
 									'is_single_use'     => $edd_discount_is_single_use
 							);
@@ -220,7 +225,15 @@ function edd_import_coupon_csv_file() {
 								) );
 
 								foreach( $meta as $key => $value ) {
-									update_post_meta( $edd_discount_id , '_edd_discount_' . $key, $value );
+									if ( is_string( $value ) || is_int( $value ) ){
+										update_post_meta( $edd_discount_id , '_edd_discount_' . $key, strip_tags( addslashes( $value ) ) );
+									}
+									elseif ( is_array( $value ) ){
+										update_post_meta( $edd_discount_id , '_edd_discount_' . $key, array_map( 'absint',  $value ) );										
+									}
+									else {
+										update_post_meta( $edd_discount_id , '_edd_discount_' . $key, $value );
+									}
 								}
 								$edd_log_file .= sprintf(__('Successfully updated row: %d', 'edd'), $row_ctr ) . "\n";
 								
@@ -238,7 +251,15 @@ function edd_import_coupon_csv_file() {
 							
 
 								foreach ( $meta as $key => $value ) {
-									update_post_meta( $new_download_id, '_edd_discount_' . $key, $value );
+									if ( is_string( $value ) || is_int( $value ) ){
+										update_post_meta( $new_download_id , '_edd_discount_' . $key, strip_tags( addslashes( $value ) ) );
+									}
+									elseif ( is_array( $value ) ){
+										update_post_meta( $new_download_id , '_edd_discount_' . $key, array_map( 'absint',  $value ) );										
+									}
+									else {
+										update_post_meta( $new_download_id , '_edd_discount_' . $key, $value );
+									}
 								}
 								$edd_log_file .= sprintf(__('Successfully imported row: %d', 'edd'), $row_ctr ) . "\n";
 							
