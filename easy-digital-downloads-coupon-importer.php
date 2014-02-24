@@ -5,7 +5,7 @@ Plugin URI: http://easydigitaldownloads.com/chris-is-amazing
 Description: Adds the ability to import coupons via a CSV file.
 Author: Chris Christoff
 Author URI: http://www.chriscct7.com
-Version: 1.1
+Version: 1.1.1
 */
 
 class EDD_CI {
@@ -42,7 +42,7 @@ class EDD_CI {
 
 		define( 'EDD_CI_STORE_API_URL', 'https://easydigitaldownloads.com' );
 		define( 'EDD_CI_PRODUCT_NAME', 'Coupon Importer' );
-		define( 'EDD_CI_VERSION', '1.1' );
+		define( 'EDD_CI_VERSION', '1.1.1' );
 		// plugin folder url
 		if ( !defined( 'EDD_COUPON_IMPORT_URL' ) ) {
 			define( 'EDD_COUPON_IMPORT_URL', plugin_dir_url( __FILE__ ) );

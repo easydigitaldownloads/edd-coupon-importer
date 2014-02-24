@@ -91,10 +91,10 @@ function edd_ci_license_page() {
 
 		function edd_ci_register_option() {
 			// creates our settings in the options table
-			register_setting('edd_ci_license', 'edd_ci_license_key', 'edd_sanitize_license' );
+			register_setting('edd_ci_license', 'edd_ci_license_key', 'edd_ci_sanitize_license' );
 		}
 
-		function edd_sanitize_license( $new ) {
+		function edd_ci_sanitize_license( $new ) {
 			$old = get_option( 'edd_ci_license_key' );
 			if( $old && $old != $new ) {
 				delete_option( 'edd_ci_license_status' ); // new license has been entered, so must reactivate

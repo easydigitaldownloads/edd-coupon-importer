@@ -196,9 +196,14 @@ function edd_import_coupon_csv_file() {
 
 						} else {
 							
-							$edd_discount_product_reqs = explode("|",$edd_discount_product_reqs);
-							foreach($edd_discount_product_reqs as $index => $val){
-								$edd_discount_product_reqs[$index] = trim($val);  
+
+							if( ! empty( $edd_discount_product_reqs ) ) {
+								$edd_discount_product_reqs = explode("|",$edd_discount_product_reqs);
+								foreach($edd_discount_product_reqs as $index => $val){
+									$edd_discount_product_reqs[$index] = trim($val);  
+								}
+							} else {
+								$edd_discount_product_reqs = false;
 							}
 							$meta = array(
 									'code'       		=> $edd_discount_code,
