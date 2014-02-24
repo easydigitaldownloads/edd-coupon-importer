@@ -169,18 +169,19 @@ class EDD_CI {
 
 		// auto updater
 
-		// retrieve our license key from the DB
-		$edd_ci_license_key = isset( $edd_options['edd_ci_license_key'] ) ? trim( $edd_options['edd_ci_license_key'] ) : '';
+		if( is_admin() ) {
+			// retrieve our license key from the DB
+			$edd_ci_license_key = isset( $edd_options['edd_ci_license_key'] ) ? trim( $edd_options['edd_ci_license_key'] ) : '';
 
-		// setup the updater
-		$edd_updater = new EDD_SL_Plugin_Updater( EDD_CI_STORE_API_URL, __FILE__, array(
-				'version' 	=> EDD_CI_VERSION, 		// current version number
-				'license' 	=> $edd_ci_license_key, // license key (used get_option above to retrieve from DB)
-				'item_name' => EDD_CI_PRODUCT_NAME, // name of this plugin
-				'author' 	=> 'Chris Christoff'  // author of this plugin
-			)
-		);
-
+			// setup the updater
+			$edd_updater = new EDD_SL_Plugin_Updater( EDD_CI_STORE_API_URL, __FILE__, array(
+					'version' 	=> EDD_CI_VERSION, 		// current version number
+					'license' 	=> $edd_ci_license_key, // license key (used get_option above to retrieve from DB)
+					'item_name' => EDD_CI_PRODUCT_NAME, // name of this plugin
+					'author' 	=> 'Chris Christoff'  // author of this plugin
+				)
+			);
+		}
 	}
 
 
