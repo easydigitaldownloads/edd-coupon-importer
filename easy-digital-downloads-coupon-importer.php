@@ -74,6 +74,7 @@ class EDD_CI {
 			// Perform the first set of updates needed
 			$edd_ci_license_key = edd_get_option( 'edd_ci_settings_license_key', '' );
 			edd_update_option( 'edd_coupon_importer_license_key', $edd_ci_license_key );
+			edd_delete_option( 'edd_ci_settings_license_key' );
 			update_option( 'edd_ci_version', EDD_CI_VERSION );
 		}
 	}
