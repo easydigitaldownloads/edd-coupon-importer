@@ -5,7 +5,7 @@ Plugin URI: https://easydigitaldownloads.com/downloads/csv-coupon-importer/
 Description: Adds the ability to import coupons via a CSV file.
 Author: Easy Digital Downloads
 Author URI: https://easydigitaldownloads.com
-Version: 1.1.1
+Version: 1.1.2
 */
 
 class EDD_CI {
@@ -43,7 +43,7 @@ class EDD_CI {
 
 		define( 'EDD_CI_STORE_API_URL', 'https://easydigitaldownloads.com' );
 		define( 'EDD_CI_PRODUCT_NAME', 'Coupon Importer' );
-		define( 'EDD_CI_VERSION', '1.1.1' );
+		define( 'EDD_CI_VERSION', '1.1.2' );
 		// plugin folder url
 		if ( !defined( 'EDD_COUPON_IMPORT_URL' ) ) {
 			define( 'EDD_COUPON_IMPORT_URL', plugin_dir_url( __FILE__ ) );
