@@ -163,7 +163,9 @@ class EDD_CI {
 		);
 
 		// register our license key settings
-		add_filter( 'edd_settings_misc', array( $this, 'settings' ), 1 );
+		add_filter( 'edd_settings_extensions', array( $this, 'settings' ), 10, 1 );
+		add_filter( 'edd_settings_sections_extensions', array( $this, 'add_settings_section' ), 10, 1 );
+
 
 		// activate license key on settings save
 		add_action( 'admin_init', array( $this, 'activate_license' ) );
@@ -206,6 +208,11 @@ class EDD_CI {
 
 	}
 
+	public function add_settings_section( $sections ) {
+		$sections['coupon_importer'] = __( 'Coupon Importer', 'easy-digital-downloads-coupon-importer' );
+
+		return $sections;
+	}
 
 	/**
 	 * Add our extension settings
@@ -345,6 +352,11 @@ class EDD_CI {
 				'options'	=> $edd_import_coupon_file_columns
 			)
 		);
+
+		if ( version_compare( EDD_VERSION, 2.5, '>=' ) ) {
+			$ci_settings = array( 'coupon_importer' => $ci_settings );
+		}
+
 		return array_merge( $settings, $ci_settings );
 	}
 
