@@ -56,16 +56,28 @@ class EDD_CI {
 		if ( !defined( 'EDD_COUPON_IMPORT_FILE' ) ) {
 			define( 'EDD_COUPON_IMPORT_FILE', __FILE__ );
 		}
-		if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
-			// load our custom updater
-			include( dirname( __FILE__ ) . '/EDD_SL_Plugin_Updater.php' );
-		}
-
+		$this->db_upgrades();
 		$this->includes();
 		$this->init();
 
 	}
 
+	/**
+	 * Perform any updates needed to settings and version numbers
+	 *
+	 * @since 1.1.2
+	 * @return void
+	 */
+	private function db_upgrades() {
+		$current_version = get_option( 'edd_ci_version' );
+		if ( empty( $current_version ) ) {
+			// Perform the first set of updates needed
+			$edd_ci_license_key = edd_get_option( 'edd_ci_settings_license_key', '' );
+			edd_update_option( 'edd_coupon_importer_license_key', $edd_ci_license_key );
+			edd_delete_option( 'edd_ci_settings_license_key' );
+			update_option( 'edd_ci_version', EDD_CI_VERSION );
+		}
+	}
 
 	/**
 	 * Include our extra files
@@ -167,24 +179,11 @@ class EDD_CI {
 		add_filter( 'edd_settings_sections_extensions', array( $this, 'add_settings_section' ), 10, 1 );
 
 
-		// activate license key on settings save
-		add_action( 'admin_init', array( $this, 'activate_license' ) );
-		add_action( 'admin_init', array( $this, 'deactivate_license' ) );
-
 		// auto updater
 
 		if( is_admin() ) {
 			// retrieve our license key from the DB
-			$edd_ci_license_key = isset( $edd_options['edd_ci_license_key'] ) ? trim( $edd_options['edd_ci_license_key'] ) : '';
-
-			// setup the updater
-			$edd_updater = new EDD_SL_Plugin_Updater( EDD_CI_STORE_API_URL, __FILE__, array(
-					'version' 	=> EDD_CI_VERSION, 		// current version number
-					'license' 	=> $edd_ci_license_key, // license key (used get_option above to retrieve from DB)
-					'item_name' => EDD_CI_PRODUCT_NAME, // name of this plugin
-					'author' 	=> 'EDD Team'  // author of this plugin
-				)
-			);
+			$license = new EDD_License( __FILE__, EDD_CI_PRODUCT_NAME, EDD_CI_VERSION, 'EDD Team' );
 		}
 	}
 
@@ -231,14 +230,6 @@ class EDD_CI {
 				'desc' => '',
 				'type' => 'header',
 				'size' => 'regular'
-			),
-			array(
-				'id'   => 'edd_ci_settings_license_key',
-				'name' => __('License Key', 'edd'),
-				'desc' => __('Enter your license for EDD Coupon Importer to receive automatic upgrades', 'edd'),
-				'type' => 'license_key',
-				'size' => 'regular',
-				'options' => array( 'is_valid_license_option' => 'edd_ci_license_active' )
 			),
 			array(
 				'id' => 'edd_csv_discount_import',
@@ -360,111 +351,6 @@ class EDD_CI {
 		return array_merge( $settings, $ci_settings );
 	}
 
-
-	/**
-	 * Activate a license key
-	 *
-	 * @since 1.0
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function activate_license() {
-
-		global $edd_options;
-
-		if( ! isset( $_POST['edd_settings_misc'] ) ) {
-			return;
-		}
-
-		if( ! isset( $_POST['edd_settings_misc']['edd_ci_license_key'] ) ) {
-			return;
-		}
-
-		if( get_option( 'edd_ci_license_active' ) == 'valid' ) {
-			return;
-		}
-
-		$license = sanitize_text_field( $_POST['edd_settings_misc']['edd_ci_license_key'] );
-
-		// data to send in our API request
-		$api_params = array(
-			'edd_action'=> 'activate_license',
-			'license' 	=> $license,
-			'item_name' => urlencode( EDD_CI_PRODUCT_NAME ) // the name of our product in EDD
-		);
-
-		// Call the custom API.
-		$response = wp_remote_get( add_query_arg( $api_params, EDD_CI_STORE_API_URL ), array( 'timeout' => 15, 'body' => $api_params, 'sslverify' => false ) );
-
-		// make sure the response came back okay
-		if ( is_wp_error( $response ) ) {
-			return false;
-		}
-
-		// decode the license data
-		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-		update_option( 'edd_ci_license_active', $license_data->license );
-
-	}
-
-
-	/**
-	 * Deactivate a license key
-	 *
-	 * @since  1.1.1
-	 * @return void
-	 */
-
-	public function deactivate_license() {
-		global $edd_options;
-
-		if ( ! isset( $_POST['edd_settings_misc'] ) ) {
-			return;
-		}
-
-		if ( ! isset( $_POST['edd_settings_misc']['edd_ci_license_key'] ) ) {
-			return;
-		}
-
-		// listen for our activate button to be clicked
-		if( isset( $_POST['edd_ci_license_key_deactivate'] ) ) {
-
-			// run a quick security check
-			if( ! check_admin_referer( 'edd_ci_license_key_nonce', 'edd_ci_license_key_nonce' ) ) {
-				return; // get out if we didn't click the Activate button
-			}
-
-			// retrieve the license from the database
-			$license = trim( $edd_options['edd_ci_license_key'] );
-
-			// data to send in our API request
-			$api_params = array(
-				'edd_action'=> 'deactivate_license',
-				'license'   => $license,
-				'item_name' => urlencode( EDD_CI_PRODUCT_NAME ) // the name of our product in EDD
-			);
-
-			// Call the custom API.
-			$response = wp_remote_get( add_query_arg( $api_params, EDD_CI_STORE_API_URL ), array( 'timeout' => 15, 'sslverify' => false ) );
-
-			// make sure the response came back okay
-			if ( is_wp_error( $response ) ) {
-				return false;
-			}
-
-			// decode the license data
-			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-			// $license_data->license will be either "deactivated" or "failed"
-			if( $license_data->license == 'deactivated' ) {
-				delete_option( 'edd_ci_license_active' );
-			}
-
-		}
-	}
-
 }
 
 
@@ -481,31 +367,3 @@ function edd_ci_load() {
 	$discounts = new EDD_CI();
 }
 add_action( 'plugins_loaded', 'edd_ci_load' );
-
-
-
-/**
- * Registers the new license field type
- *
- * @access      private
- * @since       10
- * @return      void
-*/
-
-if( ! function_exists( 'edd_license_key_callback' ) ) {
-	function edd_license_key_callback( $args ) {
-		global $edd_options;
-
-		if( isset( $edd_options[ $args['id'] ] ) ) { $value = $edd_options[ $args['id'] ]; } else { $value = isset( $args['std'] ) ? $args['std'] : ''; }
-		$size = isset( $args['size'] ) && !is_null($args['size']) ? $args['size'] : 'regular';
-		$html = '<input type="text" class="' . $args['size'] . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
-
-		if( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
-			$html .= wp_nonce_field( $args['id'] . '_nonce', $args['id'] . '_nonce', false );
-			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'edd-recurring' ) . '"/>';
-		}
-		$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-		echo $html;
-	}
-}
