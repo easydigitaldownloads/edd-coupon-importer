@@ -21,7 +21,7 @@
 
 function edd_csv_coupon_import_menu() {
 	global $edd_csv_coupon_import_page;
-		$edd_csv_coupon_import_page = add_submenu_page( 'edit.php?post_type=download', __('Easy Digital Download CSV Coupon Import', 'edd'), __('Import Coupons', 'edd'), 'manage_options', 'edd-csv-coupon-import', 'edd_csv_coupon_import_page' );
+		$edd_csv_coupon_import_page = add_submenu_page( 'edit.php?post_type=download', __('Easy Digital Download CSV Coupon Import', 'edd'), __('Import Coupons', 'edd'), 'manage_shop_discounts', 'edd-csv-coupon-import', 'edd_csv_coupon_import_page' );
 }
 add_action( 'admin_menu', 'edd_csv_coupon_import_menu', 10 );
 

@@ -21,10 +21,19 @@ function edd_import_process_coupon_file() {
 	$edd_message = '';
 
 	if ( isset( $_POST['edd-action'] ) && ( $_POST['edd-action'] == 'import_coupon_csv' ) ) {
+		// Bail if no nonce or nonce fails.
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'edd_generate_mapping' ) ) {
+			return;
+		}
+
+		// Bail if current user cannot manage shop discounts.
+		if ( ! current_user_can( 'manage_shop_discounts' ) ) {
+			return;
+		}
 
 		// check for file
 
-		if ( empty( $_FILES ) || $_FILES['import_file']['size'] == 0 ){
+		if ( empty( $_FILES ) || ! isset( $_FILES['import_file']['size'] ) || $_FILES['import_file']['size'] == 0 ) {
 			$edd_message = 'Please choose a file to import.';
 			return;
 		}
