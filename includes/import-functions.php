@@ -32,7 +32,7 @@ function edd_show_coupon_upload_form() {
 	</p>
 	<p>
 		<?php
-		$link = '<a href="' . get_admin_url() . 'edit.php?post_type=download&page=edd-csv-coupon-import" >' . __('Coupon Import Mapping', 'edd') . '</a>';
+		$link = '<a href="' . get_admin_url() . 'edit.php?post_type=download&page=edd-settings&tab=extensions&section=coupon_importer" >' . __('Coupon Import Mapping', 'edd') . '</a>';
 		echo sprintf( __('The mapping of coupon fields to CSV columns can be adjusted in the %s section.','edd'), $link );
 		?>
 	</p>
