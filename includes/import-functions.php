@@ -189,6 +189,13 @@ function edd_import_coupon_csv_file() {
 						$validation_msg  .= __('Status needs to be active, inactive, or pending', 'edd') . "; ";
 					}
 
+					// Check product condition.
+					$product_conditions = array( 'all', 'any' );
+					if ( ! in_array( $edd_discount_product_condition, $product_conditions ) ) {
+						$validation_error = true;
+						$validation_msg  .= __('Product condition is invalid.', 'edd') . "; ";
+					}
+
 					// maybe more validation later
 
 					if ( $validation_error ) {
