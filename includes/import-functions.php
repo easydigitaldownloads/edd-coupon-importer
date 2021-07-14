@@ -184,7 +184,7 @@ function edd_import_coupon_csv_file() {
 
 					// check status
 					$status = array( 'active', 'inactive', 'expired' );
-					if ( ! in_array( $edd_discount_status, $status ) ) {
+					if ( ! in_array( $edd_discount_status, $status, true ) ) {
 						$validation_error = true;
 						$validation_msg  .= __('Status needs to be active, inactive, or pending', 'edd') . "; ";
 					}
