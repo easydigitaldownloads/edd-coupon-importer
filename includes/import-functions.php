@@ -153,7 +153,7 @@ function edd_import_coupon_csv_file() {
 
 					// discount type is invalid
 					$discount_types = array( 'flat', 'percentage' );
-					if ( ! in_array( $edd_discount_type, $discount_types ) ) {
+					if ( ! in_array( $edd_discount_type, $discount_types, true ) ) {
 						$validation_error = true;
 						$validation_msg  .= __('Discount type is invalid.', 'edd') . "; ";
 					}
@@ -191,7 +191,7 @@ function edd_import_coupon_csv_file() {
 
 					// Check product condition.
 					$product_conditions = array( 'all', 'any' );
-					if ( ! in_array( $edd_discount_product_condition, $product_conditions ) ) {
+					if ( ! in_array( $edd_discount_product_condition, $product_conditions, true ) ) {
 						$validation_error = true;
 						$validation_msg  .= __('Product condition is invalid.', 'edd') . "; ";
 					}
