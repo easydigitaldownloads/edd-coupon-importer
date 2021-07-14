@@ -45,7 +45,7 @@ function edd_show_coupon_upload_form() {
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php _e('Validate File Only','edd') ?></th>
-				<td><input type="checkbox" id="check_file" name="check_file" value="on" /> <?php _e('Check file, but do not save coupons to the database.','edd') ?></td>
+				<td><label for="check_file"><input type="checkbox" id="check_file" name="check_file" value="on" /> <?php esc_html_e( 'Check file, but do not save coupons to the database.', 'edd' ); ?></label></td>
 			</tr>
 		</tbody>
 		</table>
