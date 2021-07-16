@@ -176,12 +176,6 @@ function edd_import_coupon_csv_file() {
 						$validation_msg  .= sprintf(__('Date validation failed for string: %s', 'edd'), $edd_discount_end) . "; ";
 					}
 
-					// set start time to correct date type
-					$edd_discount_start =  date( 'm/d/Y H:i:s', strtotime( $edd_discount_start ) );
-
-					// set end time to the correct date type
-					$edd_discount_end =  date( 'm/d/Y H:i:s',  strtotime(  date( 'm/d/Y', strtotime( $edd_discount_end ) ) . ' 23:59:59' )  );
-
 					// check status
 					$status = array( 'active', 'inactive', 'expired' );
 					if ( ! in_array( $edd_discount_status, $status, true ) ) {
@@ -215,6 +209,7 @@ function edd_import_coupon_csv_file() {
 								$edd_discount_product_reqs = false;
 							}
 
+							// Prepare arguments for EDD 2.X.
 							$args = array(
 								'name'              => sanitize_text_field( $edd_discount_name ),
 								'code'              => $edd_discount_code,
@@ -222,8 +217,8 @@ function edd_import_coupon_csv_file() {
 								'uses'              => absint( $edd_discount_uses ),
 								'max'               => absint( $edd_discount_max_uses ),
 								'amount'            => floatval( $edd_discount_amount ),
-								'start'             => $edd_discount_start,
-								'expiration'        => $edd_discount_end,
+								'start'             => sanitize_text_field( $edd_discount_start ),
+								'expiration'        => sanitize_text_field( $edd_discount_end ),
 								'type'              => $edd_discount_type,
 								'min_price'         => floatval( $edd_discount_min_price ),
 								'products'          => $edd_discount_product_reqs,
@@ -235,15 +230,33 @@ function edd_import_coupon_csv_file() {
 							// Is it already made?
 							$discount = edd_get_discount( $edd_discount_id );
 
+							// Check if we are on EDD 3.0+.
+							if ( function_exists( 'edd_add_adjustment' ) ) {
+								// Convert legacy argument names.
+								$args = EDD_Discount::convert_legacy_args( $args );
+
+								// Dates are in local timezone.
+								$start_date = edd_get_utc_equivalent_date( EDD()->utils->date( $args['start_date'], edd_get_timezone_id(), false ) );
+								if ( $start_date ) {
+									$args['start_date'] = $start_date->format( 'Y-m-d H:i:s' );
+								}
+
+								$end_date = edd_get_utc_equivalent_date( EDD()->utils->date( $args['end_date'], edd_get_timezone_id(), false ) );
+								if ( $end_date ) {
+									$args['end_date'] = $end_date->format( 'Y-m-d H:i:s' );
+								}
+							}
+
+							// If discount exists, update it; otherwise, add a new one.
 							if ( $discount ) {
-								// Update existing discount.
-								$discount_id = edd_store_discount( $args, $discount->id );
+								// Check if we are on EDD 3.0+.
+								$discount_id = function_exists( 'edd_add_adjustment' ) ? edd_update_discount( $discount->id, $args ) : edd_store_discount( $args, $discount->id );
 
 								$edd_log_file .= sprintf(__('Successfully updated row: %d', 'edd'), $row_ctr ) . "\n";
 
 							} else {
-								// Add new discount.
-								$discount_id = edd_store_discount( $args );
+								// Check if we are on EDD 3.0+.
+								$discount_id = function_exists( 'edd_add_adjustment' ) ? edd_add_discount( $args ) : edd_store_discount( $args );
 
 								$edd_log_file .= sprintf(__('Successfully imported row: %d', 'edd'), $row_ctr ) . "\n";
 							}
